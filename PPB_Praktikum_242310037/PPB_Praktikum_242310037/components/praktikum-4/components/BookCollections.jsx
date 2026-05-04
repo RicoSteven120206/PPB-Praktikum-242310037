@@ -3,7 +3,8 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { color_list, styles } from "../../styles/StyleApps";
 
-export default function BookCollectioins({ books }) {
+export default function BookCollectioins({ books, isSearching }) {
+  const totalItems = books.length;
   const sortedBooks = [...books].sort((a, b) => b.id - a.id);
   return (
     <View style={styles.container_book_collections}>
@@ -11,10 +12,17 @@ export default function BookCollectioins({ books }) {
         <Text style={styles.container_book_collections_title}>
           Book Collection
         </Text>
-        <Text style={{ color: color_list.green }}>See All</Text>
+        <Text style={{ color: color_list.green }}>
+          {isSearching
+            ? `Total ${totalItems} item${totalItems > 1 ? "s" : ""}`
+            : "See All"}
+        </Text>
       </View>
 
       <BookList books={sortedBooks} />
+      <View style={styles.not_found}>
+        <Text>No Record Found</Text>
+      </View>
     </View>
   );
 }

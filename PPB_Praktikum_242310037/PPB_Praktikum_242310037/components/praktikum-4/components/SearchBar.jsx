@@ -1,11 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
 import { styles } from "../../styles/StyleApps";
 
-const SearchPage = () => {
-  const [text, setText] = useState("");
-
+const SearchPage = ({ value, setValue }) => {
   return (
     <View style={styles.s_container}>
       <Pressable style={styles.btn_search_section}>
@@ -17,8 +14,8 @@ const SearchPage = () => {
         />
         <TextInput
           placeholder="Cari Judul Buku..."
-          value={text}
-          onChangeText={setText}
+          value={value}
+          onChangeText={(text) => setValue(text)}
           style={styles.search_sm}
         />
       </Pressable>

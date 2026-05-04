@@ -2,9 +2,9 @@ import { useMemo, useState } from "react";
 import { ScrollView, StatusBar, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ListBook from "../../constants/list_book";
+import BookCollection from "../praktikum-4/components/BookCollections";
 import SearchBar from "../praktikum-4/components/SearchBar";
 import { color_list, styles } from "../styles/StyleApps";
-import BookCollection from "./components/BookCollections";
 
 const SearchPage = () => {
   const [search, setSearch] = useState("");
@@ -39,9 +39,9 @@ const SearchPage = () => {
         contentContainerStyle={{ paddingBottom: 20 }}
       >
         <View style={{ flex: 1 }}>
-          <BookCollection books={BookDataMemori} />
+          <BookCollection books={BookDataMemori} isSearching={search.length} />
         </View>
-        <View>
+        <View style={{ justifyContent: "flex-end" }}>
           <Text style={{ color: color_list.green, textAlign: "center" }}>
             &copy; 2026 Frederico Steven Kwok
           </Text>

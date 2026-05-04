@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     minHeight: 34,
   },
   container_book_collections: {
-    flex: 1,
+    justifyContent: "flex-start",
     marginTop: 10,
   },
   container_book_collections_title: {
@@ -120,6 +120,8 @@ const styles = StyleSheet.create({
   },
   book_grid: {
     flexDirection: "row",
+    alignContent: "flex-start",
+    alignItems: "flex-start",
     flexWrap: "wrap",
     justifyContent: "space-between",
     marginTop: 10,
@@ -154,8 +156,8 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   s_container: {
-    flex: 1,
-    marginVertical: 50,
+    marginTop: 20,
+    marginBottom: 10,
     width: "100%",
   },
   btn_search_section: {
@@ -172,6 +174,13 @@ const styles = StyleSheet.create({
     height: "100%",
     fontSize: 18,
     color: "#333",
+  },
+  not_found: {
+    flex: 1,
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    width: "100%",
+    padding: 20,
   },
 });
 
