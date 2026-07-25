@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import {
-    DrawerContentScrollView,
-    DrawerItemList,
+  DrawerContentScrollView,
+  DrawerItemList,
 } from "@react-navigation/drawer";
 import { Text, View } from "react-native";
 import { color_list } from "../../components/styles/StyleApps";

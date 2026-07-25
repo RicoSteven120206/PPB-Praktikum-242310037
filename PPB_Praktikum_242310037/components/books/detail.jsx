@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import ListBook from "../../constants/list_book";
+import AudioBookPlayer from "./AudioBookPlayer";
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -68,16 +69,17 @@ export default function BookDetailScreen() {
           <Text style={styles.ratingText}>{book.rating} / 5.0</Text>
         </View>
 
+        {/* Bagian ini yang diganti — synopsisText polos jadi AudioBookPlayer */}
         <View style={styles.synopsisBox}>
           <Text style={styles.synopsisLabel}>SINOPSIS</Text>
-          <Text style={styles.synopsisText}>{book.sinopsis}</Text>
+          <AudioBookPlayer text={book.sinopsis} />
 
           {book.story && (
             <>
               <Text style={[styles.synopsisLabel, { marginTop: 20 }]}>
                 STORY
               </Text>
-              <Text style={styles.synopsisText}>{book.story}</Text>
+              <AudioBookPlayer text={book.story} />
             </>
           )}
         </View>
@@ -103,7 +105,7 @@ export default function BookDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a2228", 
+    backgroundColor: "#1a2228",
   },
   centerAll: {
     justifyContent: "center",
@@ -187,7 +189,7 @@ const styles = StyleSheet.create({
   footer: {
     padding: 20,
     paddingBottom: 30,
-    backgroundColor: "transparent", 
+    backgroundColor: "transparent",
   },
   btnAction: {
     flexDirection: "row",
@@ -196,10 +198,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    gap: 10, 
+    gap: 10,
   },
   btnPremium: {
-    backgroundColor: "#EAB308", 
+    backgroundColor: "#EAB308",
   },
   txtPremium: {
     color: "#FFF",

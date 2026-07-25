@@ -1,2 +1,2 @@
-export { default } from "@/components/praktikum-5/ExplorePage";
+export { default } from "../../../components/praktikum-7/Explore/index";
 

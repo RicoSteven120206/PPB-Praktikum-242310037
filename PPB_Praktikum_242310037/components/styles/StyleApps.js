@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   h_container: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 15,
+    paddingBottom: 15,
   },
   shadow: {
     shadowColor: "#000",
@@ -185,5 +185,84 @@ const styles = StyleSheet.create({
   },
 });
 
-export { color_list, styles };
+const style_explore = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  headerContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+  },
+  headerContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+  map: {
+    flex: 1,
+  },
+  mapFallback: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e2e8f0",
+  },
+  mapFallbackText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1e293b",
+    marginTop: 10,
+  },
+  mapFallbackSubtext: {
+    fontSize: 13,
+    color: "gray",
+    marginTop: 4,
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
+  mapFallbackHint: {
+    fontSize: 12,
+    color: "gray",
+    marginTop: 8,
+    fontStyle: "italic",
+  },
+  subtitle: {
+    fontSize: 13,
+    color: "gray",
+    marginTop: 6,
+  },
+  storeRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  storeInfo: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  storeTitle: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#1e293b",
+  },
+  storeRatingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  storeMeta: {
+    fontSize: 12,
+    color: "gray",
+    marginTop: 4,
+  },
+});
+
+export { color_list, style_explore, styles };
 

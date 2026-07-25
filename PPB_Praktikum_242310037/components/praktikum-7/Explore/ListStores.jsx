@@ -1,24 +1,27 @@
-import { AntDesign } from "@expo/vector-icons";
-import { Text } from "react-native";
-import { View } from "react-native-web";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import { Text, View } from "react-native";
+import { style_explore } from "../../styles/StyleApps";
 
-const ListStores = ({ stores }) => {
+const ListStores = ({ stores = [] }) => {
   return (
     <View>
       {stores.map((store, index) => (
-        <View key={index}>
-          <View>
-            <AntDesign name="shopping" size={24} color={"green"} />
-          </View>
-          <View>
-            <Text>{store?.title}</Text>
-            <Text>
-              <AntDesign name="star" size={18} color={"orange"} /> 4
+        <View key={store?.id ?? index} style={style_explore.storeRow}>
+          <AntDesign name="shopping" size={24} color="green" />
+          <View style={style_explore.storeInfo}>
+            <Text style={style_explore.storeTitle}>{store?.title}</Text>
+            <View style={style_explore.storeRatingRow}>
+              <AntDesign name="star" size={16} color="orange" />
+              <Text style={{ marginLeft: 4 }}>{store?.rating ?? "-"}</Text>
+            </View>
+            <Text style={style_explore.storeMeta}>
+              Open &middot; Closes {store?.closeHour ?? "-"} pm &middot; {store?.phone ?? "-"}
             </Text>
-            <Text>Open &middot; Closes 10.00 pm &middot; (021) 1234-5678</Text>
           </View>
         </View>
       ))}
     </View>
   );
 };
+
+export default ListStores;
