@@ -1,34 +1,3 @@
-// import { useLocalSearchParams } from "expo-router";
-// import { Text, View } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// import ListBook from "../../constants/list_book";
-
-// const Detail = () => {
-//   const { id } = useLocalSearchParams();
-//   const book = ListBook.find((books) => books.id.toString() === id?.toString());
-
-//   if (!book) {
-//     return (
-//       <SafeAreaView
-//         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-//       >
-//         <Text>Book not found or loading...</Text>
-//       </SafeAreaView>
-//     );
-//   }
-
-//   return (
-//     <SafeAreaView>
-//       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-//         <Text>ID: {id}</Text>
-//         <Text>Title: {book.title}</Text>
-//       </View>
-//     </SafeAreaView>
-//   );
-// };
-
-// export default Detail;
-
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -42,17 +11,14 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Sesuaikan path import dengan struktur folder Anda
 import ListBook from "../../constants/list_book";
 
 export default function BookDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  // Mencari buku berdasarkan ID dari parameter URL
   const book = ListBook.find((b) => b.id.toString() === id);
 
-  // Jika buku tidak ditemukan (misal error ID)
   if (!book) {
     return (
       <SafeAreaView style={[styles.container, styles.centerAll]}>
@@ -71,7 +37,6 @@ export default function BookDetailScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#1a2228" />
 
-      {/* HEADER: Back, Heart, Share (Sesuai gambar referensi) */}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -89,7 +54,6 @@ export default function BookDetailScreen() {
         </View>
       </View>
 
-      {/* KONTEN BUKU */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -108,7 +72,6 @@ export default function BookDetailScreen() {
           <Text style={styles.synopsisLabel}>SINOPSIS</Text>
           <Text style={styles.synopsisText}>{book.sinopsis}</Text>
 
-          {/* Menampilkan Story jika datanya ada */}
           {book.story && (
             <>
               <Text style={[styles.synopsisLabel, { marginTop: 20 }]}>
@@ -120,16 +83,13 @@ export default function BookDetailScreen() {
         </View>
       </ScrollView>
 
-      {/* DYNAMIC FOOTER BUTTON (FREE vs PREMIUM) */}
       <View style={styles.footer}>
         {book.is_free ? (
-          // TAMPILAN JIKA BUKU GRATIS (Tombol Putih)
           <TouchableOpacity style={[styles.btnAction, styles.btnFree]}>
             <Ionicons name="book-outline" size={20} color="#1E293B" />
             <Text style={styles.txtFree}>Read Book</Text>
           </TouchableOpacity>
         ) : (
-          // TAMPILAN JIKA BUKU PREMIUM (Tombol Kuning)
           <TouchableOpacity style={[styles.btnAction, styles.btnPremium]}>
             <Ionicons name="card-outline" size={20} color="#FFF" />
             <Text style={styles.txtPremium}>Subscribe</Text>
@@ -143,7 +103,7 @@ export default function BookDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1a2228", // Warna gelap menyesuaikan desain gambar
+    backgroundColor: "#1a2228", 
   },
   centerAll: {
     justifyContent: "center",
@@ -227,7 +187,7 @@ const styles = StyleSheet.create({
   footer: {
     padding: 20,
     paddingBottom: 30,
-    backgroundColor: "transparent", // Membiarkan background utama menembus
+    backgroundColor: "transparent", 
   },
   btnAction: {
     flexDirection: "row",
@@ -236,20 +196,18 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    gap: 10, // Memberi jarak antara icon dan teks
+    gap: 10, 
   },
-  // Style khusus tombol Premium
   btnPremium: {
-    backgroundColor: "#EAB308", // Warna kuning/oranye
+    backgroundColor: "#EAB308", 
   },
   txtPremium: {
     color: "#FFF",
     fontSize: 18,
     fontWeight: "bold",
   },
-  // Style khusus tombol Free
   btnFree: {
-    backgroundColor: "#FFF", // Warna putih
+    backgroundColor: "#FFF",
   },
   txtFree: {
     color: "#1E293B",
