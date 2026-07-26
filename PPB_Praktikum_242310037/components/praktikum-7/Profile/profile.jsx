@@ -1,233 +1,228 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { useState } from "react";
+import { useRouter, useSegments } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-    Alert,
-    Image,
-    ScrollView,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { checkLoginStatus, logoutUser } from "../../../utils/session";
+import SignInForm from "../../praktikum-8/SignInForm";
 import { color_list, styles } from "../../styles/StyleApps";
 
 export default function ProfileScreen() {
-  const [avatar, setAvatar] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
+  const router = useRouter();
+  const segments = useSegments();
 
-  const [profile, setProfile] = useState({
-    name: "Frederico Steven Kwok",
-    email: "frederico.steven@example.com",
-    bio: "Pecinta buku fiksi dan non-fiksi. Selalu mencari cerita baru.",
-  });
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [userData, setUserData] = useState(null);
 
-  const [tempProfile, setTempProfile] = useState(profile);
+  useEffect(() => {
+    (async () => {
+      const data = await checkLoginStatus();
+      setUserData(data);
+      setCheckingAuth(false);
+    })();
+  }, [segments]);
 
-  const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (status !== "granted") {
-      Alert.alert(
-        "Izin ditolak",
-        "Aplikasi membutuhkan akses galeri untuk mengubah foto profil."
-      );
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setAvatar(result.assets[0].uri);
-    }
+  const handleSignOut = () => {
+    Alert.alert("Sign Out", "Apakah Anda yakin ingin keluar?", [
+      { text: "Batal", style: "cancel" },
+      {
+        text: "Sign Out",
+        style: "destructive",
+        onPress: async () => {
+          await logoutUser();
+          setUserData(null);
+          router.replace("/auth/signin");
+        },
+      },
+    ]);
   };
 
-  const handleSave = () => {
-    if (!tempProfile.name.trim()) {
-      Alert.alert("Nama tidak boleh kosong", "Silakan isi nama Anda.");
-      return;
-    }
-    setProfile(tempProfile);
-    setIsEditing(false);
-    Alert.alert("Berhasil", "Profil Anda telah diperbarui.");
-  };
+  if (checkingAuth) {
+    return (
+      <SafeAreaView
+        style={[styles.container, { justifyContent: "center", alignItems: "center" }]}
+      >
+        <ActivityIndicator size="large" color={color_list.green} />
+      </SafeAreaView>
+    );
+  }
 
-  const handleCancel = () => {
-    setTempProfile(profile);
-    setIsEditing(false);
-  };
+  if (!userData) {
+    return (
+      <SafeAreaView style={[styles.container, { justifyContent: "center" }]}>
+        <SignInForm onSuccess={(data) => setUserData(data)} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <TouchableOpacity onPress={isEditing ? pickImage : undefined}>
-            <View style={{ position: "relative" }}>
-              {avatar ? (
-                <Image
-                  source={{ uri: avatar }}
-                  style={{ width: 110, height: 110, borderRadius: 55 }}
-                />
-              ) : (
-                <View
-                  style={{
-                    width: 110,
-                    height: 110,
-                    borderRadius: 55,
-                    backgroundColor: color_list.green_light,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Ionicons
-                    name="person"
-                    size={50}
-                    color={color_list.green}
-                  />
-                </View>
-              )}
-              {isEditing && (
-                <View
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    right: 0,
-                    width: 32,
-                    height: 32,
-                    borderRadius: 16,
-                    backgroundColor: color_list.green,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderWidth: 2,
-                    borderColor: "#fff",
-                  }}
-                >
-                  <Ionicons name="camera" size={16} color="#fff" />
-                </View>
-              )}
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
+        {/* Profile header */}
+        <View style={{ flexDirection: "row", alignItems: "center", marginTop: 15 }}>
+          <View
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 28,
+              backgroundColor: color_list.green_light,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons name="person" size={28} color={color_list.green} />
+          </View>
+          <View style={{ marginLeft: 12, flex: 1 }}>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>{userData.username}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center", marginTop: 2 }}>
+              <Ionicons name="ribbon-outline" size={13} color={color_list.green} />
+              <Text style={{ color: color_list.green, fontSize: 12, marginLeft: 4 }}>
+                Basic Member
+              </Text>
             </View>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", gap: 10, marginTop: 16 }}>
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 6,
+              paddingVertical: 12,
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: "#ddd",
+            }}
+          >
+            <Ionicons name="person-outline" size={16} color="#333" />
+            <Text style={{ fontSize: 13, fontWeight: "600" }}>View Profile</Text>
           </TouchableOpacity>
-
-          {!isEditing && (
-            <>
-              <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 12 }}>
-                {profile.name}
-              </Text>
-              <Text style={{ color: "gray", marginTop: 4 }}>{profile.email}</Text>
-            </>
-          )}
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 6,
+              paddingVertical: 12,
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: "#ddd",
+            }}
+            onPress={() => router.push("/main-apps/qr-scanner")}
+          >
+            <Ionicons name="qr-code-outline" size={16} color="#333" />
+            <Text style={{ fontSize: 13, fontWeight: "600" }}>Scan QR</Text>
+          </TouchableOpacity>
         </View>
 
-        <View style={{ marginTop: 30 }}>
-          <FieldRow
-            label="Nama Lengkap"
-            value={isEditing ? tempProfile.name : profile.name}
-            editable={isEditing}
-            onChangeText={(text) =>
-              setTempProfile((prev) => ({ ...prev, name: text }))
-            }
-          />
-          <FieldRow
-            label="Email"
-            value={isEditing ? tempProfile.email : profile.email}
-            editable={isEditing}
-            keyboardType="email-address"
-            onChangeText={(text) =>
-              setTempProfile((prev) => ({ ...prev, email: text }))
-            }
-          />
-          <FieldRow
-            label="Bio"
-            value={isEditing ? tempProfile.bio : profile.bio}
-            editable={isEditing}
-            multiline
-            onChangeText={(text) =>
-              setTempProfile((prev) => ({ ...prev, bio: text }))
-            }
-          />
+        {/* Rewards section */}
+        <Text style={{ marginTop: 26, marginBottom: 10, fontWeight: "bold", fontSize: 15 }}>
+          My Rewards
+        </Text>
+        <View
+          style={{
+            backgroundColor: color_list.green,
+            borderRadius: 16,
+            padding: 18,
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Ionicons name="star" size={16} color="#FBBF24" />
+            <Text style={{ color: "#fff", marginLeft: 6, fontWeight: "600" }}>
+              Reward Points
+            </Text>
+          </View>
+          <Text style={{ color: "#fff", fontSize: 12, marginTop: 10, opacity: 0.8 }}>
+            Available Points
+          </Text>
+          <Text style={{ color: "#fff", fontSize: 26, fontWeight: "bold" }}>1,250 pts</Text>
+
+          <View style={{ flexDirection: "row", gap: 8, marginTop: 14 }}>
+            <RewardMiniBtn icon="gift-outline" label="Redeem" />
+            <RewardMiniBtn icon="time-outline" label="History" />
+            <RewardMiniBtn icon="add-circle-outline" label="Earn More" />
+          </View>
         </View>
 
-        <View style={{ marginTop: 30, gap: 10 }}>
-          {isEditing ? (
-            <>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: color_list.green,
-                  paddingVertical: 14,
-                  borderRadius: 12,
-                  alignItems: "center",
-                }}
-                onPress={handleSave}
-              >
-                <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}>
-                  Simpan Perubahan
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  paddingVertical: 14,
-                  borderRadius: 12,
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: "gray",
-                }}
-                onPress={handleCancel}
-              >
-                <Text style={{ color: "gray", fontWeight: "600" }}>Batal</Text>
-              </TouchableOpacity>
-            </>
-          ) : (
-            <TouchableOpacity
-              style={{
-                backgroundColor: color_list.green,
-                paddingVertical: 14,
-                borderRadius: 12,
-                alignItems: "center",
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 8,
-              }}
-              onPress={() => setIsEditing(true)}
-            >
-              <Ionicons name="create-outline" size={20} color="#fff" />
-              <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 16 }}>
-                Edit Profil
-              </Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        {/* Preferences */}
+        <Text style={{ marginTop: 26, marginBottom: 6, fontWeight: "bold", fontSize: 15 }}>
+          Preferences
+        </Text>
+        <PrefRow icon="shield-checkmark-outline" label="Account Safety" />
+        <PrefRow icon="card-outline" label="Payment Methods" />
+        <PrefRow icon="wallet-outline" label="My Coints" />
+        <PrefRow icon="lock-closed-outline" label="Privacy Policy" />
+        <PrefRow icon="help-circle-outline" label="Help & Support" />
+        <PrefRow icon="document-text-outline" label="Terms of Service" />
+        <PrefRow icon="language-outline" label="Language" last />
+
+        {/* Sign Out */}
+        <TouchableOpacity
+          style={{
+            marginTop: 26,
+            backgroundColor: "#EF4444",
+            paddingVertical: 14,
+            borderRadius: 30,
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "center",
+            gap: 8,
+          }}
+          onPress={handleSignOut}
+        >
+          <Ionicons name="log-out-outline" size={18} color="#fff" />
+          <Text style={{ color: "#fff", fontWeight: "bold" }}>Sign Out</Text>
+        </TouchableOpacity>
+
+        <Text style={{ textAlign: "center", color: "gray", fontSize: 11, marginTop: 14 }}>
+          Version 1.0.0
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-const FieldRow = ({ label, value, editable, onChangeText, multiline, keyboardType }) => (
-  <View style={{ marginBottom: 18 }}>
-    <Text style={{ fontSize: 13, color: "gray", marginBottom: 6 }}>{label}</Text>
-    {editable ? (
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        multiline={multiline}
-        keyboardType={keyboardType}
-        style={{
-          borderWidth: 1,
-          borderColor: "#ddd",
-          borderRadius: 10,
-          padding: 12,
-          fontSize: 15,
-          minHeight: multiline ? 80 : undefined,
-          textAlignVertical: multiline ? "top" : "center",
-        }}
-      />
-    ) : (
-      <Text style={{ fontSize: 15, color: "#1e293b" }}>{value}</Text>
-    )}
-  </View>
+const RewardMiniBtn = ({ icon, label }) => (
+  <TouchableOpacity
+    style={{
+      flex: 1,
+      backgroundColor: "rgba(255,255,255,0.15)",
+      borderRadius: 10,
+      paddingVertical: 8,
+      alignItems: "center",
+    }}
+  >
+    <Ionicons name={icon} size={16} color="#fff" />
+    <Text style={{ color: "#fff", fontSize: 11, marginTop: 4 }}>{label}</Text>
+  </TouchableOpacity>
+);
+
+const PrefRow = ({ icon, label, last }) => (
+  <TouchableOpacity
+    style={{
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingVertical: 14,
+      borderBottomWidth: last ? 0 : 1,
+      borderBottomColor: "#eee",
+    }}
+  >
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <Ionicons name={icon} size={18} color="#555" />
+      <Text style={{ fontSize: 14 }}>{label}</Text>
+    </View>
+    <Ionicons name="chevron-forward" size={16} color="#ccc" />
+  </TouchableOpacity>
 );

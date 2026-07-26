@@ -5,7 +5,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { color_list } from "../styles/StyleApps";
 
 const AudioBookPlayer = ({ text }) => {
-  const [status, setStatus] = useState("idle"); 
+  const [status, setStatus] = useState("idle");
   const [boundary, setBoundary] = useState({ charIndex: 0, charLength: 0 });
 
   useEffect(() => {

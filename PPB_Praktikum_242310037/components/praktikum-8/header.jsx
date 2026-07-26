@@ -3,13 +3,15 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { checkLoginStatus } from "../../../utils/session";
-import { styles } from "../../styles/StyleApps";
+import { checkLoginStatus } from "../../utils/session";
+import { styles } from "../styles/StyleApps";
 
 const Header = () => {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
 
+  // useFocusEffect memastikan data ter-refresh setiap kali Homescreen kembali fokus
+  // (misal setelah user baru saja login lalu kembali ke halaman ini)
   useFocusEffect(
     useCallback(() => {
       (async () => {
